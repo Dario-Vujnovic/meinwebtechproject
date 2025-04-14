@@ -6,19 +6,21 @@ import jakarta.persistence.*;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private int id;
     private String description;
     private boolean done;
 
     public Task() {}
 
-    public Task(String description) {
+
+
+    public Task(int id, String description, boolean done) {
+        this.id = id;
         this.description = description;
         this.done = false;
     }
 
-    public Long getId() { return id; }
+    public int getId() { return id; }
     public String getDescription() { return description; }
     public boolean isDone() { return done; }
 
