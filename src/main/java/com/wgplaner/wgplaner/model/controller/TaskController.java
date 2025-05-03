@@ -1,4 +1,4 @@
-package com.wgplaner.wgplaner.controller;
+package com.wgplaner.wgplaner.model.controller;
 
 import com.wgplaner.wgplaner.model.Task;
 import com.wgplaner.wgplaner.repository.TaskRepository;
@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/tasks")
-@CrossOrigin(origins = "*") // Für Frontend-Zugriff
+@CrossOrigin(origins = "*")
 public class TaskController {
 
     private final TaskRepository taskRepository;
