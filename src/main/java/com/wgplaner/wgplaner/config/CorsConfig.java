@@ -14,7 +14,8 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:5173",
-                                "https://wgplaner-frontend-e7ek.onrender.com")
+                                "https://wgplaner-frontend-e7ek.onrender.com",
+                                "https://wgplaner-frontend.onrender.com")
                         .allowedMethods("*");
             }
         };
