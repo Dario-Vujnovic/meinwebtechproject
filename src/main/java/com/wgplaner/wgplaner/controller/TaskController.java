@@ -7,7 +7,6 @@ import com.wgplaner.wgplaner.repository.RoommateRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/tasks")
@@ -29,18 +28,25 @@ public class TaskController {
 
     @PostMapping
     public Task createTask(@RequestBody Task task) {
+        System.out.println("Received task: " + task);
+        System.out.println("Roommate in task: " + (task.getRoommate() != null ? task.getRoommate().getId() : "null"));
+
         if (task.getRoommate() != null && task.getRoommate().getId() != null) {
             Long roommateId = task.getRoommate().getId();
             Roommate roommate = roommateRepository.findById(roommateId)
                     .orElseThrow(() -> new RuntimeException("Roommate not found with ID: " + roommateId));
+            System.out.println("Found roommate: " + roommate.getName() + " with ID: " + roommate.getId());
             task.setRoommate(roommate);
         } else {
+            System.out.println("No roommate set or roommate ID is null");
             task.setRoommate(null);
         }
-        return taskRepository.save(task);
+
+        Task savedTask = taskRepository.save(task);
+        System.out.println("Saved task: " + savedTask.getId() + " with roommate: " +
+                (savedTask.getRoommate() != null ? savedTask.getRoommate().getId() : "null"));
+        return savedTask;
     }
-
-
 
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable Long id) {
@@ -64,7 +70,6 @@ public class TaskController {
 
         return taskRepository.save(task);
     }
-
 }
 
 
