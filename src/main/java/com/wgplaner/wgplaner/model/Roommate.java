@@ -13,6 +13,10 @@ public class Roommate {
 
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "flat_id")
+    private Flat flat;
+
 }
 
 

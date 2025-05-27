@@ -1,4 +1,4 @@
-package com.wgplaner.wgplaner.model.controller;
+package com.wgplaner.wgplaner.controller;
 
 import com.wgplaner.wgplaner.model.Roommate;
 import com.wgplaner.wgplaner.repository.RoommateRepository;
