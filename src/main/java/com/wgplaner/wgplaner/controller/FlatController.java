@@ -2,12 +2,10 @@ package com.wgplaner.wgplaner.controller;
 
 import com.wgplaner.wgplaner.model.Flat;
 import com.wgplaner.wgplaner.repository.FlatRepository;
-import com.wgplaner.wgplaner.repository.FlatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/flats")
@@ -22,8 +20,9 @@ public class FlatController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Flat> getFlatById(@PathVariable Long id) {
-        return flatRepository.findById(id);
+    public Flat getFlatById(@PathVariable Long id) {
+        return flatRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Wohnung nicht gefunden"));
     }
 
     @PostMapping
@@ -33,8 +32,12 @@ public class FlatController {
 
     @PutMapping("/{id}")
     public Flat updateFlat(@PathVariable Long id, @RequestBody Flat updatedFlat) {
-        updatedFlat.setId(id);
-        return flatRepository.save(updatedFlat);
+        Flat existing = flatRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Wohnung nicht gefunden"));
+
+        existing.setName(updatedFlat.getName()); // Nur den Namen übernehmen
+
+        return flatRepository.save(existing);
     }
 
     @DeleteMapping("/{id}")
@@ -42,5 +45,3 @@ public class FlatController {
         flatRepository.deleteById(id);
     }
 }
-
-
