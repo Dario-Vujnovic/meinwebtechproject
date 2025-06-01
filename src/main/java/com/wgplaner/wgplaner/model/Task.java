@@ -1,11 +1,8 @@
 package com.wgplaner.wgplaner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Setter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.FetchType;
-import com.wgplaner.wgplaner.model.Flat;
-
 
 @Entity
 public class Task {
@@ -14,11 +11,6 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "flat_id")
-    private Flat flat;
-
-    // Setter
     @Setter
     private String description;
 
@@ -28,9 +20,13 @@ public class Task {
     @Setter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "roommate_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"flat"}) // Verhindert Rückverweis auf Flat im Roommate
     private Roommate roommate;
 
+    @ManyToOne
+    @JoinColumn(name = "flat_id")
+    @JsonIgnoreProperties({"roommates", "tasks"}) // Verhindert Endlosschleife
+    private Flat flat;
 
     public Task() {}
 
@@ -57,6 +53,11 @@ public class Task {
         return roommate;
     }
 
+    public Flat getFlat() {
+        return flat;
+    }
+
+    public void setFlat(Flat flat) {
+        this.flat = flat;
+    }
 }
-
-

@@ -1,5 +1,6 @@
 package com.wgplaner.wgplaner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -13,9 +14,11 @@ public class Flat {
     private String name;
 
     @OneToMany(mappedBy = "flat", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore  // Verhindert zirkuläre Referenzen bei Roommates
     private List<Roommate> roommates;
 
     @OneToMany(mappedBy = "flat", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore  // Verhindert zirkuläre Referenzen bei Tasks
     private List<Task> tasks;
 
     public Flat() {}
@@ -58,4 +61,3 @@ public class Flat {
         this.tasks = tasks;
     }
 }
-

@@ -1,5 +1,6 @@
 package com.wgplaner.wgplaner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,8 +16,7 @@ public class Roommate {
 
     @ManyToOne
     @JoinColumn(name = "flat_id")
+    @JsonIgnoreProperties({"roommates", "tasks"}) // Verhindert endlose Rückverweise auf Flat
     private Flat flat;
 
 }
-
-
