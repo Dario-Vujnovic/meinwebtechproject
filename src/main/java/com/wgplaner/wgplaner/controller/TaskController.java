@@ -5,6 +5,7 @@ import com.wgplaner.wgplaner.repository.TaskRepository;
 import com.wgplaner.wgplaner.repository.FlatRepository;
 import com.wgplaner.wgplaner.repository.RoommateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,30 +30,45 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Task> getTaskById(@PathVariable Long id) {
-        return taskRepository.findById(id);
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        return taskRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/{flatId}")
-    public Task createTask(@PathVariable Long flatId, @RequestBody Task task) {
-        flatRepository.findById(flatId).ifPresent(task::setFlat);
-        if (task.getRoommate() != null && task.getRoommate().getId() != null) {
-            roommateRepository.findById(task.getRoommate().getId()).ifPresent(task::setRoommate);
-        }
-        return taskRepository.save(task);
+    public ResponseEntity<Task> createTask(@PathVariable Long flatId, @RequestBody Task task) {
+        return flatRepository.findById(flatId)
+                .map(flat -> {
+                    task.setFlat(flat);
+                    if (task.getRoommate() != null && task.getRoommate().getId() != null) {
+                        roommateRepository.findById(task.getRoommate().getId())
+                                .ifPresent(task::setRoommate);
+                    }
+                    Task saved = taskRepository.save(task);
+                    return ResponseEntity.ok(saved);
+                })
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
         updatedTask.setId(id);
+
         if (updatedTask.getRoommate() != null && updatedTask.getRoommate().getId() != null) {
-            roommateRepository.findById(updatedTask.getRoommate().getId()).ifPresent(updatedTask::setRoommate);
+            roommateRepository.findById(updatedTask.getRoommate().getId())
+                    .ifPresent(updatedTask::setRoommate);
         }
-        return taskRepository.save(updatedTask);
+
+        return ResponseEntity.ok(taskRepository.save(updatedTask));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTask(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        if (!taskRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         taskRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
