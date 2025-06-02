@@ -1,8 +1,11 @@
 package com.wgplaner.wgplaner.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Entity
 public class Task {
@@ -17,15 +20,20 @@ public class Task {
     @Setter
     private boolean done;
 
+    // Frist-Datum – wird als yyyy-MM-dd im JSON formatiert
+    @Setter
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dueDate;
+
     @Setter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "roommate_id")
-    @JsonIgnoreProperties({"flat"}) // Verhindert Rückverweis auf Flat im Roommate
+    @JsonIgnoreProperties({"flat"})
     private Roommate roommate;
 
     @ManyToOne
     @JoinColumn(name = "flat_id")
-    @JsonIgnoreProperties({"roommates", "tasks"}) // Verhindert Endlosschleife
+    @JsonIgnoreProperties({"roommates", "tasks"})
     private Flat flat;
 
     public Task() {}
@@ -41,12 +49,21 @@ public class Task {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
     public String getDescription() {
         return description;
     }
 
     public boolean isDone() {
         return done;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
     }
 
     public Roommate getRoommate() {
