@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/roommates")
+@RequestMapping("/api/roommates")
 @CrossOrigin(origins = "*")
 public class RoommateController {
 
