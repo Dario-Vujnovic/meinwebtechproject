@@ -22,8 +22,11 @@ public class CorsConfig {
                 HttpServletResponse response = (HttpServletResponse) res;
 
                 String origin = request.getHeader("Origin");
-                if ("https://wgplaner-frontend-e7ek.onrender.com".equals(origin) ||
-                        "http://localhost:5174".equals(origin)) {
+                if (
+                        "https://wgplaner-frontend.onrender.com".equals(origin) ||
+                                "http://localhost:5174".equals(origin)
+                ) {
+
                     response.setHeader("Access-Control-Allow-Origin", origin);
                 }
 
