@@ -92,7 +92,7 @@ public class TaskControllerTest {
         task = taskRepository.save(task);
 
         mockMvc.perform(delete("/api/tasks/" + task.getId()))
-                .andExpect(status().isNoContent()); // korrekt: 204 statt 200
+                .andExpect(status().isNoContent());
     }
 }
 
