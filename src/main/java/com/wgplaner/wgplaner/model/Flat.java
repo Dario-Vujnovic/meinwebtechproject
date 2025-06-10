@@ -27,7 +27,7 @@ public class Flat {
         this.name = name;
     }
 
-    // Getter & Setter
+    //Getter & Setter
 
     public Long getId() {
         return id;
