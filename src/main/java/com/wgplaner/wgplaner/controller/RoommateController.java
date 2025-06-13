@@ -1,7 +1,9 @@
 package com.wgplaner.wgplaner.controller;
 
 import com.wgplaner.wgplaner.model.Roommate;
+import com.wgplaner.wgplaner.model.Task;
 import com.wgplaner.wgplaner.repository.RoommateRepository;
+import com.wgplaner.wgplaner.repository.TaskRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +15,11 @@ import java.util.Optional;
 public class RoommateController {
 
     private final RoommateRepository roommateRepository;
+    private final TaskRepository taskRepository;
 
-    public RoommateController(RoommateRepository roommateRepository) {
+    public RoommateController(RoommateRepository roommateRepository, TaskRepository taskRepository) {
         this.roommateRepository = roommateRepository;
+        this.taskRepository = taskRepository;
     }
 
     @GetMapping
@@ -48,8 +52,20 @@ public class RoommateController {
 
     @DeleteMapping("/{id}")
     public void deleteRoommate(@PathVariable Long id) {
+        // 1. Alle Aufgaben des Roommates finden
+        List<Task> tasks = taskRepository.findByRoommate_Id(id);
+
+        // 2. Roommate von Aufgaben entkoppeln
+        for (Task task : tasks) {
+            task.setRoommate(null);  // Unassigned
+            taskRepository.save(task);
+        }
+
+        // 3. Roommate löschen
         roommateRepository.deleteById(id);
     }
 }
+
+
 
 

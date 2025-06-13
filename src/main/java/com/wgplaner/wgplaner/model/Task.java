@@ -27,9 +27,10 @@ public class Task {
 
     @Setter
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "roommate_id")
+    @JoinColumn(name = "roommate_id", nullable = true) // <- nun nullable!
     @JsonIgnoreProperties({"flat"})
     private Roommate roommate;
+
 
     @ManyToOne
     @JoinColumn(name = "flat_id")
